@@ -62,7 +62,7 @@ async function updateGist(stats) {
       gist_id: gistId,
       files: {
         [filename]: {
-          filename: `📊 Kan's Coding Activity`,
+          filename: `💻 Kan's Coding Activity`,
           content: lines.join("\n")
         }
       }
