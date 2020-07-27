@@ -4,5 +4,5 @@ branding:
   icon: "clipboard"
   color: "blue"
 runs:
-  using: "node13"
+  using: "node12"
   main: "dist/index.js"
