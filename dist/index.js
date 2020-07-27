@@ -838,43 +838,49 @@ module.exports = (function(e, t) {
   },
   104: function(e, t, r) {
     r(63).config();
-    const { WakaTimeClient: n, RANGE: i } = r(650);
-    const s = r(0);
-    const { GIST_ID: o, GH_TOKEN: a, WAKATIME_API_KEY: u } = process.env;
-    const p = new n(u);
-    const c = new s({ auth: `token ${a}` });
+    const { WakaTimeClient: n } = r(650);
+    const i = r(0);
+    const { GIST_ID: s, GH_TOKEN: o, WAKATIME_API_KEY: a } = process.env;
+    const u = new n(a);
+    const p = new i({ auth: `token ${o}` });
+    const c = new Date();
+    const d = new Date(Date.now() - 864e5);
     async function main() {
-      const e = await p.getMyStats({ range: i.LAST_7_DAYS });
+      const e = await u.getMySummary({
+        dateRange: { startDate: d.toISOString(), endDate: c.toISOString() }
+      });
       await updateGist(e);
     }
     async function updateGist(e) {
       let t;
       try {
-        t = await c.gists.get({ gist_id: o });
+        t = await p.gists.get({ gist_id: s });
       } catch (e) {
         console.error(`Unable to get gist\n${e}`);
       }
       const r = [];
-      for (let t = 0; t < Math.min(e.data.languages.length, 5); t++) {
-        const n = e.data.languages[t];
-        const { name: i, percent: s, text: o } = n;
-        const a = [
-          i.padEnd(11),
-          o.padEnd(14),
-          generateBarChart(s, 21),
-          String(s.toFixed(1)).padStart(5) + "%"
-        ];
-        r.push(a.join(" "));
+      if (e.data[1].languages.length) {
+        r.push(`Last Activity: ${c}\n`);
+        for (let t = 0; t < Math.min(e.data[1].languages.length, 20); t++) {
+          const n = e.data[1].languages[t];
+          const { name: i, percent: s, text: o } = n;
+          const a = [
+            i.padEnd(11),
+            o.padEnd(14),
+            generateBarChart(s, 21),
+            String(s.toFixed(1)).padStart(5) + "%"
+          ];
+          r.push(a.join(" "));
+        }
       }
+      if (r.length == 0) return;
       try {
         const e = Object.keys(t.data.files)[0];
-        await c.gists.update({
-          gist_id: o,
+        console.debug(r);
+        await p.gists.update({
+          gist_id: s,
           files: {
-            [e]: {
-              filename: `📊 Weekly development breakdown`,
-              content: r.join("\n")
-            }
+            [e]: { filename: `💻 Kan's Coding Activity`, content: r.join("\n") }
           }
         });
       } catch (e) {
@@ -1525,6 +1531,12 @@ module.exports = (function(e, t) {
   },
   215: function(e) {
     e.exports = {
+      _args: [
+        [
+          "@octokit/rest@16.36.0",
+          "C:\\Users\\kanis\\Documents\\workspace\\waka-box"
+        ]
+      ],
       _from: "@octokit/rest@16.36.0",
       _id: "@octokit/rest@16.36.0",
       _inBundle: false,
@@ -1545,12 +1557,10 @@ module.exports = (function(e, t) {
       },
       _requiredBy: ["/"],
       _resolved: "https://registry.npmjs.org/@octokit/rest/-/rest-16.36.0.tgz",
-      _shasum: "99892c57ba632c2a7b21845584004387b56c2cb7",
-      _spec: "@octokit/rest@16.36.0",
-      _where: "/Users/soramorimoto/src/github.com/matchai/waka-box",
+      _spec: "16.36.0",
+      _where: "C:\\Users\\kanis\\Documents\\workspace\\waka-box",
       author: { name: "Gregor Martynus", url: "https://github.com/gr2m" },
       bugs: { url: "https://github.com/octokit/rest.js/issues" },
-      bundleDependencies: false,
       bundlesize: [{ path: "./dist/octokit-rest.min.js.gz", maxSize: "33 kB" }],
       contributors: [
         { name: "Mike de Boer", email: "info@mikedeboer.nl" },
@@ -1572,7 +1582,6 @@ module.exports = (function(e, t) {
         once: "^1.4.0",
         "universal-user-agent": "^4.0.0"
       },
-      deprecated: false,
       description: "GitHub REST API client for Node.js",
       devDependencies: {
         "@gimenete/type-writer": "^0.1.3",
@@ -3676,6 +3685,9 @@ module.exports = (function(e, t) {
   },
   361: function(e) {
     e.exports = {
+      _args: [
+        ["axios@0.19.0", "C:\\Users\\kanis\\Documents\\workspace\\waka-box"]
+      ],
       _from: "axios@0.19.0",
       _id: "axios@0.19.0",
       _inBundle: false,
@@ -3695,16 +3707,13 @@ module.exports = (function(e, t) {
       },
       _requiredBy: ["/"],
       _resolved: "https://registry.npmjs.org/axios/-/axios-0.19.0.tgz",
-      _shasum: "8e09bff3d9122e133f7b8101c8fbdd00ed3d2ab8",
-      _spec: "axios@0.19.0",
-      _where: "/Users/soramorimoto/src/github.com/matchai/waka-box",
+      _spec: "0.19.0",
+      _where: "C:\\Users\\kanis\\Documents\\workspace\\waka-box",
       author: { name: "Matt Zabriskie" },
       browser: { "./lib/adapters/http.js": "./lib/adapters/xhr.js" },
       bugs: { url: "https://github.com/axios/axios/issues" },
-      bundleDependencies: false,
       bundlesize: [{ path: "./dist/axios.min.js", threshold: "5kB" }],
       dependencies: { "follow-redirects": "1.5.10", "is-buffer": "^2.0.2" },
-      deprecated: false,
       description: "Promise based HTTP client for the browser and node.js",
       devDependencies: {
         bundlesize: "^0.17.0",
