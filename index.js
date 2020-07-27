@@ -1,5 +1,5 @@
 require("dotenv").config();
-const { WakaTimeClient, RANGE } = require("wakatime-client");
+const { WakaTimeClient } = require("wakatime-client");
 const Octokit = require("@octokit/rest");
 
 const {
