@@ -11,9 +11,16 @@ const {
 const wakatime = new WakaTimeClient(wakatimeApiKey);
 
 const octokit = new Octokit({ auth: `token ${githubToken}` });
+const today = new Date();
+const yesterday = new Date(Date.now() - 864e5);
 
 async function main() {
-  const stats = await wakatime.getMyStats({ range: RANGE.LAST_7_DAYS });
+  const stats = await wakatime.getMySummary({
+    dateRange: {
+      startDate: yesterday.toISOString(),
+      endDate: today.toISOString()
+    }
+  });
   await updateGist(stats);
 }
 
@@ -26,18 +33,23 @@ async function updateGist(stats) {
   }
 
   const lines = [];
-  for (let i = 0; i < Math.min(stats.data.languages.length, 5); i++) {
-    const data = stats.data.languages[i];
-    const { name, percent, text: time } = data;
 
-    const line = [
-      name.padEnd(11),
-      time.padEnd(14),
-      generateBarChart(percent, 21),
-      String(percent.toFixed(1)).padStart(5) + "%"
-    ];
+  // check if "today" data is populated for the day
+  if (stats.data[1].languages.length) {
+    lines.push(`Last Activity: ${today}\n`);
+    for (let i = 0; i < Math.min(stats.data[1].languages.length, 20); i++) {
+      const data = stats.data[1].languages[i];
+      const { name, percent, text: time } = data;
 
-    lines.push(line.join(" "));
+      const line = [
+        name.padEnd(11),
+        time.padEnd(14),
+        generateBarChart(percent, 21),
+        String(percent.toFixed(1)).padStart(5) + "%"
+      ];
+
+      lines.push(line.join(" "));
+    }
   }
 
   if (lines.length == 0) return;
@@ -45,11 +57,12 @@ async function updateGist(stats) {
   try {
     // Get original filename to update that same file
     const filename = Object.keys(gist.data.files)[0];
+    console.debug(lines);
     await octokit.gists.update({
       gist_id: gistId,
       files: {
         [filename]: {
-          filename: `📊 Weekly development breakdown`,
+          filename: `📊 Kan's Coding Activity`,
           content: lines.join("\n")
         }
       }
