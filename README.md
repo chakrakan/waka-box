@@ -6,6 +6,8 @@
 
 ---
 
+Modified to update daily programming activity for myself 😎
+
 > 📌✨ For more pinned-gist projects like this one, check out: https://github.com/matchai/awesome-pinned-gists
 
 ## Setup
