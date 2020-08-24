@@ -860,7 +860,6 @@ module.exports = (function(e, t) {
       }
       const r = [];
       if (e.data[1].languages.length) {
-        r.push(`Last Activity: ${c}\n`);
         for (let t = 0; t < Math.min(e.data[1].languages.length, 20); t++) {
           const n = e.data[1].languages[t];
           const { name: i, percent: s, text: o } = n;
@@ -872,6 +871,7 @@ module.exports = (function(e, t) {
           ];
           r.push(a.join(" "));
         }
+        r.push(`\nLast Activity: ${c}\n`);
       }
       if (r.length == 0) return;
       try {
