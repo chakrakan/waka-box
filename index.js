@@ -36,7 +36,6 @@ async function updateGist(stats) {
 
   // check if "today" data is populated for the day
   if (stats.data[1].languages.length) {
-    lines.push(`Last Activity: ${today}\n`);
     for (let i = 0; i < Math.min(stats.data[1].languages.length, 20); i++) {
       const data = stats.data[1].languages[i];
       const { name, percent, text: time } = data;
@@ -50,6 +49,7 @@ async function updateGist(stats) {
 
       lines.push(line.join(" "));
     }
+    lines.push(`\nLast Activity: ${today}\n`);
   }
 
   if (lines.length == 0) return;
